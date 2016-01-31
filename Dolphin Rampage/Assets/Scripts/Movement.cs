@@ -4,21 +4,28 @@ using System.Collections;
 public class Movement : MonoBehaviour {
 
 	public double playerSpeed;
-	public Rigidbody2D body;
+	private Rigidbody2D playerBody;
+	public float waterGrav;
+	public float airGrav;
+	public bool inWater;
 	//public BoxCollider2D water;
 	//private GameObject water = GameObject.Find ("Water");
 	//public bool inWater;
 
 	// Use this for initialization
 	void Start () {
-
+		playerBody = GetComponent<Rigidbody2D>();
+		playerBody.gravityScale = airGrav;
+		inWater = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		double horizontal = Input.GetAxis ("Horizontal") * playerSpeed;
-		double vertical = Input.GetAxis ("Vertical") * playerSpeed;
-		body.AddForce (new Vector2 ((float)horizontal, (float)vertical));
+		if (inWater) {
+			double horizontal = Input.GetAxis ("Horizontal") * playerSpeed;
+			double vertical = Input.GetAxis ("Vertical") * playerSpeed;
+			playerBody.AddForce (new Vector2 ((float)horizontal, (float)vertical));
+		}
 
 		//if (inWater) {
 		//	body.gravityScale = .1f;
@@ -28,12 +35,13 @@ public class Movement : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D other){
-		body.gravityScale = .5f;
-
+		playerBody.gravityScale = waterGrav;
+		inWater = true;
 	}
 
 	void OnTriggerExit2D(Collider2D other){
-		body.gravityScale = 1f;
+		playerBody.gravityScale = airGrav;
+		inWater = false;
 	}
 
 }
