@@ -19,8 +19,8 @@ public class CameraController : MonoBehaviour {
 	void Update () {
 		newPosition.x += Time.deltaTime * speed;
 		totalDistance += (newPosition.x - transform.position.x);
-		score.text = "Score: " + ((int)(newPosition.x-transform.position.x)).ToString();
-		distanceText.text = "Distance: " + ((int)totalDistance).ToString ();//((int)newPosition.x).ToString();
+		//score.text = "Score: " + ((int)(newPosition.x-transform.position.x)).ToString();
+		//distanceText.text = "Distance: " + ((int)totalDistance).ToString ();//((int)newPosition.x).ToString();
 		transform.position = newPosition;
 	}
 }
