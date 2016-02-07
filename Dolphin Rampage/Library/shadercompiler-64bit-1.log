@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Base path: C:/Program Files/Unity/Editor/Data
 Pipe name: \\.\pipe\UnityShaderCompiler-64bit-1-3528
 Cmd: getPlatforms
@@ -1330,3 +1331,8 @@ Cmd: compileSnippet
   api=4 type=0 insize=75205 outsize=9894 kw=DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION BILLBOARD_FACE_CAMERA_POS pd= ok=1
 Cmd: compileSnippet
   api=4 type=1 insize=75205 outsize=2761 kw=DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION BILLBOARD_FACE_CAMERA_POS pd= ok=1
+=======
+Base path: C:/Program Files/Unity5.2.0f3/Editor/Data
+Pipe name: \\.\pipe\UnityShaderCompiler-64bit-1-672
+Cmd: getPlatforms
+>>>>>>> 5cb5475304ae3adb5ede6e14cd64168ce52caa67
