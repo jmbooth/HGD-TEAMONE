@@ -14,7 +14,6 @@ public class ScrollingScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if ((transform.position.x + spriteWidth) < cameraTransform.position.x) {
-			Debug.Log (transform.position.x + " + " + spriteWidth + "+" + cameraTransform.position.x);
 			Vector3 pos = transform.position;
 			pos.x += 2.0f * spriteWidth;
 			transform.position = pos;
