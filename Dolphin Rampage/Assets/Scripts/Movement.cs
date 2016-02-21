@@ -44,6 +44,21 @@ public class Movement : MonoBehaviour {
 			return;
 	
 
+		//rotate the dolphin based on user input
+		Vector3 temp = transform.rotation.eulerAngles;
+		temp.z = 0.0f;
+		transform.rotation = Quaternion.Euler (temp);
+
+		if (Input.GetAxis ("Vertical") > 0) {
+			temp = transform.rotation.eulerAngles;
+			temp.z = 30.0f;
+			transform.rotation = Quaternion.Euler (temp);
+		} else if (Input.GetAxis ("Vertical") < 0) {
+			temp = transform.rotation.eulerAngles;
+			temp.z = -30.0f;
+			transform.rotation = Quaternion.Euler (temp);
+		}
+
 		double horizontal;
 		double vertical;
 		if (inWater) {
