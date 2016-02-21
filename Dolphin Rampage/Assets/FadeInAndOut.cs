@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class FadeInAndOut : MonoBehaviour
 {
@@ -11,7 +12,12 @@ public class FadeInAndOut : MonoBehaviour
 	private bool sceneEnding = false;
 
 	private string nextScene = "";
-	
+
+	void Start()
+	{
+		GetComponent<Image> ().color = Color.black;
+	}
+
 	void Update ()
 	{
 		// If the scene is starting...
@@ -27,7 +33,7 @@ public class FadeInAndOut : MonoBehaviour
 	void FadeToClear ()
 	{
 		// Lerp the colour of the texture between itself and transparent.
-		GetComponent<Image>().color = Color.Lerp(Color.black, Color.clear, fadeInSpeed * Time.deltaTime);
+		GetComponent<Image>().color = Color.Lerp(GetComponent<Image>().color, Color.clear, fadeInSpeed * Time.deltaTime);
 
 	}
 	
@@ -71,6 +77,6 @@ public class FadeInAndOut : MonoBehaviour
 		// If the screen is almost black...
 		if(GetComponent<Image>().color.a >= 0.95f)
 			// ... reload the level.
-			Application.LoadLevel(sceneToLoad);
+			SceneManager.LoadScene(sceneToLoad);
 	}
 }
