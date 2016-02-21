@@ -3,8 +3,10 @@ using System.Collections;
 
 public class MainMenuToGame : MonoBehaviour {
 
+	public GameObject sceneController;
+
 	void Update () {
 		if(Input.GetKeyUp("space"))
-			Application.LoadLevel("Scene_1");
+			sceneController.GetComponent<FadeInAndOut>().EndScene("Scene_1");
 	}
 }

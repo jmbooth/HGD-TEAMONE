@@ -10,9 +10,12 @@ public class Movement : MonoBehaviour {
 	public float airGrav;
 	public float speedToDestroyBoat;
 	private bool inWater;
+	private bool isDead = false;
 	//public BoxCollider2D water;
 	//private GameObject water = GameObject.Find ("Water");
 	//public bool inWater;
+
+	public GameObject sceneController;
 
 	// Use this for initialization
 	void Start () {
@@ -23,6 +26,11 @@ public class Movement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		//don't allow the player to move if the player is dead
+		if (isDead) 
+			return;
+	
+
 		double horizontal;
 		double vertical;
 		if (inWater) {
@@ -52,8 +60,8 @@ public class Movement : MonoBehaviour {
 				Destroy (other.gameObject);
 			}
 		} else if (other.gameObject.CompareTag ("Net")) {
-			Destroy (other.gameObject);
-			damageTaken ();
+			//Destroy (other.gameObject);
+			netDeath ();
 		}
 	}
 
@@ -64,8 +72,18 @@ public class Movement : MonoBehaviour {
 		}
 	}
 
-	void damageTaken(){
-		Destroy (GameObject.Find ("Player"));
+	void netDeath(){
+		//Destroy (GameObject.Find ("Player"));
+		isDead = true;
+
+
+		//stop the player
+		playerBody.velocity = Vector2.zero;
+		playerBody.AddForce (new Vector2 ((float)playerSpeed,(float)playerSpeed));
+		playerBody.gravityScale = 0;
+
+		sceneController.GetComponent<FadeInAndOut> ().EndScene ("DeathScreen");
+		//Application.LoadLevel("DeathScreen");
 	}
 
 }
