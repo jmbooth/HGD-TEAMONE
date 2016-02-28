@@ -99,6 +99,12 @@ public class Movement : MonoBehaviour {
 		} else if (other.gameObject.CompareTag ("Net")) {
 			//Destroy (other.gameObject);
 			netDeath ();
+		} else if (other.gameObject.CompareTag ("Harpooner")) {
+			Destroy (other.gameObject);
+			score += 20;
+		} else if (other.gameObject.CompareTag ("Harpoon")) {
+			//Temporary until we make another death(?)
+			netDeath();
 		}
 	}
 
