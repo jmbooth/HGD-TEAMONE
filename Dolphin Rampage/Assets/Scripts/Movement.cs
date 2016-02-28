@@ -14,10 +14,8 @@ public class Movement : MonoBehaviour {
 	private bool isDead = false;
 	public Text distanceText;
 	public Text scoreText;
-	public Text endText;
-	private int score;
-	private int dist;
-	private bool destroyed;
+	public static int score;
+	public static int dist;
 	private int distCtr;
 	//public BoxCollider2D water;
 	//private GameObject water = GameObject.Find ("Water");
@@ -33,7 +31,6 @@ public class Movement : MonoBehaviour {
 		score = 0;
 		dist = 0;
 		setText ();
-		destroyed = false;
 		distCtr = 0;
 	}
 	
@@ -43,7 +40,6 @@ public class Movement : MonoBehaviour {
 		if (isDead) 
 			return;
 	
-
 		//rotate the dolphin based on user input
 		Vector3 temp = transform.rotation.eulerAngles;
 		temp.z = 0.0f;
@@ -70,7 +66,7 @@ public class Movement : MonoBehaviour {
 		}
 		playerBody.AddForce (new Vector2 ((float)horizontal, (float)vertical));
 
-		if (distCtr == 60) {
+		if (distCtr == 30) {
 			dist += 1;
 			distCtr = 0;
 		}
@@ -91,6 +87,9 @@ public class Movement : MonoBehaviour {
 		} else if (other.gameObject.CompareTag ("Fisherman")) {
 			Destroy (other.gameObject);
 			score += 10;
+		} else if (other.gameObject.CompareTag ("Harpooner")) {
+			Destroy (other.gameObject);
+			score += 10;
 		} else if (other.gameObject.CompareTag ("Boat")) {
 			if (playerBody.velocity.magnitude >= speedToDestroyBoat) {
 				Destroy (other.gameObject);
@@ -99,12 +98,8 @@ public class Movement : MonoBehaviour {
 		} else if (other.gameObject.CompareTag ("Net")) {
 			//Destroy (other.gameObject);
 			netDeath ();
-		} else if (other.gameObject.CompareTag ("Harpooner")) {
-			Destroy (other.gameObject);
-			score += 20;
 		} else if (other.gameObject.CompareTag ("Harpoon")) {
-			//Temporary until we make another death(?)
-			netDeath();
+			netDeath ();
 		}
 	}
 
@@ -118,7 +113,6 @@ public class Movement : MonoBehaviour {
 	void netDeath(){
 		//Destroy (GameObject.Find ("Player"));
 		isDead = true;
-		destroyed = true;
 		setText ();
 
 		//stop the player
@@ -131,14 +125,12 @@ public class Movement : MonoBehaviour {
 	}
 
 	void setText(){
-		if (!destroyed) {
+		if (!isDead) {
 			scoreText.text = "Score: " + score.ToString ();
-			distanceText.text = "Distance: " + dist.ToString ();
-			endText.text = "";
+			distanceText.text = "Distance: " + dist.ToString () + " ft";
 		} else {
 			scoreText.text = "";
 			distanceText.text = "";
-			endText.text = "Final Score: " + score.ToString() + " Total Distance: " + dist.ToString();
 		}
 	}
 
