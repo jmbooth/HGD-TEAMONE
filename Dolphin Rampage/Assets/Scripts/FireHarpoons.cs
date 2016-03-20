@@ -15,6 +15,8 @@ public class FireHarpoons : MonoBehaviour {
 	void Update () {
 		timecount += 1;
 		if (timecount >= 120) {
+			//Vector3 temp = transform.rotation.eulerAngles;
+			//temp.z += 90;
 			Instantiate (harpoon, transform.position, Quaternion.identity);
 			timecount = 0;
 		}

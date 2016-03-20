@@ -99,7 +99,7 @@ public class Movement : MonoBehaviour {
 			//Destroy (other.gameObject);
 			netDeath ();
 		} else if (other.gameObject.CompareTag ("Harpoon")) {
-			netDeath ();
+			harpoonDeath ();
 		}
 	}
 
@@ -122,6 +122,17 @@ public class Movement : MonoBehaviour {
 
 		sceneController.GetComponent<FadeInAndOut> ().EndScene ("DeathScreen");
 		//Application.LoadLevel("DeathScreen");
+	}
+
+	void harpoonDeath(){
+		isDead = true;
+		setText ();
+
+		playerBody.velocity = Vector2.zero;
+		playerBody.AddForce (new Vector2 (-50, 0));
+		playerBody.gravityScale = 0;
+
+		sceneController.GetComponent<FadeInAndOut> ().EndScene ("DeathScreen");
 	}
 
 	void setText(){
