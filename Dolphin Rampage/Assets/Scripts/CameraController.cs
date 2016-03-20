@@ -8,7 +8,7 @@ public class CameraController : MonoBehaviour {
 	public Text score;
 	public float speed=1f;
 	private Vector3 newPosition;
-	private GameObject player;
+	public GameObject player;
 	private float playerY;
 	private Vector3 basePosition;
 	private float baseY;
@@ -20,7 +20,7 @@ public class CameraController : MonoBehaviour {
 	void Start () {
 		newPosition = this.transform.position;
 		Camera.main.nearClipPlane = 0f;
-		player =  GameObject.FindWithTag ("Player");
+		//player =  GameObject.FindWithTag ("Player");
 		playerY = player.transform.position.y;
 		basePosition = transform.position;
 
