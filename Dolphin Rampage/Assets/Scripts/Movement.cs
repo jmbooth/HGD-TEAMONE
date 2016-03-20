@@ -6,6 +6,7 @@ public class Movement : MonoBehaviour {
 
 	public double playerSpeed;
 	public double playerSpeedInAir;
+	public double PlayerMaxSpeed = 50;
 	private Rigidbody2D playerBody;
 	public float waterGrav;
 	public float airGrav;
@@ -57,6 +58,7 @@ public class Movement : MonoBehaviour {
 			transform.rotation = Quaternion.Euler (temp);
 		}
 
+
 		double horizontal;
 		double vertical;
 		if (inWater) {
@@ -66,7 +68,8 @@ public class Movement : MonoBehaviour {
 			horizontal = Input.GetAxis ("Horizontal") * playerSpeedInAir;
 			vertical = Input.GetAxis ("Vertical") * playerSpeedInAir;
 		}
-		playerBody.AddForce (new Vector2 ((float)horizontal, (float)vertical));
+		if(playerBody.velocity.magnitude < PlayerMaxSpeed || horizontal < 0)
+			playerBody.AddForce (new Vector2 ((float)horizontal, (float)vertical));
 
         /*if (distCtr == 30) {
 			dist += 1;
