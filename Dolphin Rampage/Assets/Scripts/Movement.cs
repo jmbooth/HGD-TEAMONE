@@ -15,8 +15,9 @@ public class Movement : MonoBehaviour {
 	public Text distanceText;
 	public Text scoreText;
 	public static int score;
-	public static int dist;
-	private int distCtr;
+	public static float dist;
+	//private int distCtr;
+    private Vector3 dolphPos;
 	//public BoxCollider2D water;
 	//private GameObject water = GameObject.Find ("Water");
 	//public bool inWater;
@@ -30,8 +31,9 @@ public class Movement : MonoBehaviour {
 		inWater = false;
 		score = 0;
 		dist = 0;
-		setText ();
-		distCtr = 0;
+        dolphPos = transform.position;
+        setText ();
+		//distCtr = 0;
 	}
 	
 	// Update is called once per frame
@@ -66,11 +68,18 @@ public class Movement : MonoBehaviour {
 		}
 		playerBody.AddForce (new Vector2 ((float)horizontal, (float)vertical));
 
-		if (distCtr == 30) {
+        /*if (distCtr == 30) {
 			dist += 1;
 			distCtr = 0;
 		}
-		distCtr++;
+		distCtr++;*/
+        if(transform.position.x < dolphPos.x){
+            dist -= Vector3.Distance(transform.position, dolphPos);
+        }
+        else {
+            dist += Vector3.Distance(transform.position, dolphPos);
+        }
+        dolphPos = transform.position;
 		setText ();
 
 		//if (inWater) {
@@ -87,14 +96,17 @@ public class Movement : MonoBehaviour {
 		} else if (other.gameObject.CompareTag ("Fisherman")) {
 			Destroy (other.gameObject);
 			score += 10;
+            randomDrop();
 		} else if (other.gameObject.CompareTag ("Harpooner")) {
 			Destroy (other.gameObject);
 			score += 10;
-		} else if (other.gameObject.CompareTag ("Boat")) {
+            randomDrop();
+        } else if (other.gameObject.CompareTag ("Boat")) {
 			if (playerBody.velocity.magnitude >= speedToDestroyBoat) {
 				Destroy (other.gameObject);
 				score += 15;
-			}
+                randomDrop();
+            }
 		} else if (other.gameObject.CompareTag ("Net")) {
 			//Destroy (other.gameObject);
 			netDeath ();
@@ -127,11 +139,19 @@ public class Movement : MonoBehaviour {
 	void setText(){
 		if (!isDead) {
 			scoreText.text = "Score: " + score.ToString ();
-			distanceText.text = "Distance: " + dist.ToString () + " ft";
+            int textDist = (int)dist;
+			distanceText.text = "Distance: " + textDist.ToString () + " ft";
 		} else {
 			scoreText.text = "";
 			distanceText.text = "";
 		}
 	}
+
+    void randomDrop() {
+        int rnd = Random.Range(0, 1);
+        if(rnd == 1) {
+            // Drop random power up
+        }
+    }
 
 }
