@@ -10,8 +10,8 @@ public class CameraController : MonoBehaviour {
 	private Vector3 newPosition;
 	public GameObject player;
 	private float playerY;
-	private Vector3 basePosition;
-	private float baseY;
+	private float playerX;
+	Vector3 basePosition;
 	public float moveThreshold;
 	public float maxOffset;
 	public float minOffset;
@@ -22,6 +22,7 @@ public class CameraController : MonoBehaviour {
 		Camera.main.nearClipPlane = 0f;
 		//player =  GameObject.FindWithTag ("Player");
 		playerY = player.transform.position.y;
+		playerX = player.transform.position.x;
 		basePosition = transform.position;
 
 	}
@@ -39,6 +40,8 @@ public class CameraController : MonoBehaviour {
 	}
 
 	void LateUpdate(){
+
+		//move the camera up and down
 		playerY = player.transform.position.y;
 		basePosition = transform.position;
 		if (playerY > moveThreshold) {
@@ -54,6 +57,14 @@ public class CameraController : MonoBehaviour {
 				transform.position += new Vector3 (0, playerY + moveThreshold - basePosition.y);
 			}
 		}
+
+
+		//Move the camera to the right
+		if(player.transform.position.x - Camera.main.gameObject.transform.position.x > 3 )
+				transform.position += new Vector3 (player.transform.position.x - basePosition.x, 0);
+			
+		
+
 	}
 		
 }
