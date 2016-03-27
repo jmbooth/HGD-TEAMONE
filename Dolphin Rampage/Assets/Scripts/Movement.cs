@@ -16,9 +16,10 @@ public class Movement : MonoBehaviour {
 	public Text distanceText;
 	public Text scoreText;
 	public static int score;
-	public static float dist;
-	//private int distCtr;
+    public static float dist;
     private Vector3 dolphPos;
+    private int scoreMultiplier;
+    private int powerUpTimer;
 	//public BoxCollider2D water;
 	//private GameObject water = GameObject.Find ("Water");
 	//public bool inWater;
@@ -29,12 +30,12 @@ public class Movement : MonoBehaviour {
 	void Start () {
 		playerBody = GetComponent<Rigidbody2D>();
 		playerBody.gravityScale = airGrav;
-		inWater = false;
+        inWater = false;
 		score = 0;
 		dist = 0;
         dolphPos = transform.position;
         setText ();
-		//distCtr = 0;
+        scoreMultiplier = 1;
 	}
 	
 	// Update is called once per frame
@@ -73,11 +74,6 @@ public class Movement : MonoBehaviour {
 
 		playerBody.AddForce (new Vector2 ((float)horizontal, (float)vertical));
 
-        /*if (distCtr == 30) {
-			dist += 1;
-			distCtr = 0;
-		}
-		distCtr++;*/
         if(transform.position.x < dolphPos.x){
             dist -= Vector3.Distance(transform.position, dolphPos);
         }
@@ -86,6 +82,14 @@ public class Movement : MonoBehaviour {
         }
         dolphPos = transform.position;
 		setText ();
+
+        if(scoreMultiplier > 1) {
+            powerUpTimer--;
+            if(powerUpTimer == 0) {
+                scoreMultiplier = 1;
+                powerUpTimer = 900;
+            }
+        }
 
 		//if (inWater) {
 		//	body.gravityScale = .1f;
@@ -97,28 +101,36 @@ public class Movement : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other){
 		if (other.gameObject.CompareTag ("Water")) {
 			playerBody.gravityScale = waterGrav;
-			inWater = true;
+            inWater = true;
 		} else if (other.gameObject.CompareTag ("Fisherman")) {
 			Destroy (other.gameObject);
-			score += 10;
-            randomDrop();
+			score += 10 * scoreMultiplier;
+            Vector3 v = new Vector3(other.gameObject.transform.position.x, other.gameObject.transform.position.y);
+            randomDrop(v);
 		} else if (other.gameObject.CompareTag ("Harpooner")) {
 			Destroy (other.gameObject);
-			score += 10;
-            randomDrop();
+			score += 10 * scoreMultiplier;
+            Vector3 v = new Vector3(other.gameObject.transform.position.x, other.gameObject.transform.position.y);
+            randomDrop(v);
         } else if (other.gameObject.CompareTag ("Boat")) {
 			if (playerBody.velocity.magnitude >= speedToDestroyBoat) {
 				Destroy (other.gameObject);
-				score += 15;
-                randomDrop();
+				score += 15 * scoreMultiplier;
+                Vector3 v = new Vector3(other.gameObject.transform.position.x, other.gameObject.transform.position.y);
+                randomDrop(v);
             }
 		} else if (other.gameObject.CompareTag ("Net")) {
 			//Destroy (other.gameObject);
 			netDeath ();
 		} else if (other.gameObject.CompareTag ("Harpoon")) {
-			netDeath ();
-		}
-	}
+			harpoonDeath ();
+		} else if (other.gameObject.CompareTag ("PowerUp")) {
+            Destroy(other.gameObject);
+            scoreMultiplier = 2;
+            powerUpTimer = 900;
+        }
+
+    }
 
 	void OnTriggerExit2D(Collider2D other){
 		if (other.gameObject.CompareTag ("Water")) {
@@ -141,6 +153,17 @@ public class Movement : MonoBehaviour {
 		//Application.LoadLevel("DeathScreen");
 	}
 
+	void harpoonDeath(){
+		isDead = true;
+		setText ();
+
+		playerBody.velocity = Vector2.zero;
+		playerBody.AddForce (new Vector2 (-50, 0));
+		playerBody.gravityScale = 0;
+
+		sceneController.GetComponent<FadeInAndOut> ().EndScene ("DeathScreen");
+	}
+
 	void setText(){
 		if (!isDead) {
 			scoreText.text = "Score: " + score.ToString ();
@@ -152,10 +175,12 @@ public class Movement : MonoBehaviour {
 		}
 	}
 
-    void randomDrop() {
-        int rnd = Random.Range(0, 1);
-        if(rnd == 1) {
+    void randomDrop(Vector3 v) {
+        GameObject powerup = GameObject.Find("PowerUp");
+        int rnd = Random.Range(0, 3);
+        if(/*rnd == 1*/ true) {
             // Drop random power up
+            Object rObj = Instantiate(powerup, v, powerup.transform.rotation);
         }
     }
 

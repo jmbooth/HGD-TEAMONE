@@ -14,4 +14,10 @@ public class HarpoonTravel : MonoBehaviour {
 	void Update () {
 		transform.Translate (new Vector3 (-travelspeed, 0, 0));
 	}
+
+	void OnTriggerEnter2D(Collider2D other){
+		if (other.gameObject.CompareTag ("Player")) {
+			travelspeed = (float)0.5 * travelspeed;
+		}
+	}
 }
