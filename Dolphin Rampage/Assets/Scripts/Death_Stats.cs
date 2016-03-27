@@ -10,7 +10,8 @@ public class Death_Stats : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		finalScore.text = "Final Score: " + Movement.score.ToString ();
-		finalDist.text = "Final Distance: " + Movement.dist.ToString () + " ft";
+        int textDist = (int)Movement.dist;
+		finalDist.text = "Final Distance: " + textDist.ToString () + " ft";
 	}
 	
 	// Update is called once per frame
