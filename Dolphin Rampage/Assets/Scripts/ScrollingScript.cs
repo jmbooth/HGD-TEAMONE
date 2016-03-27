@@ -19,7 +19,6 @@ public class ScrollingScript : MonoBehaviour {
 	}
 
 	void LateUpdate () {
-		Debug.Log (this.name + "\t "+Camera.main.transform.position.x );
 
 		if ((transform.position.x + spriteWidth) < Camera.main.transform.position.x) {
 
