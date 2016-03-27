@@ -16,6 +16,9 @@ public class CameraController : MonoBehaviour {
 	public float maxOffset;
 	public float minOffset;
 
+
+	private bool fixatedOnPlayer = false;
+
 	// Use this for initialization
 	void Start () {
 		newPosition = this.transform.position;
@@ -30,16 +33,22 @@ public class CameraController : MonoBehaviour {
 	// Update is called once per frame
 	float totalDistance;
 	void Update () {
+		newPosition = this.transform.position;
+
 		//transform.position = pos;
 		newPosition.x += Time.deltaTime * speed;
 
 		totalDistance += (newPosition.x - transform.position.x);
 		//score.text = "Score: " + ((int)(newPosition.x-transform.position.x)).ToString();
 		//distanceText.text = "Distance: " + ((int)totalDistance).ToString ();//((int)newPosition.x).ToString();
+
+
 		transform.position = newPosition;
 	}
 
 	void LateUpdate(){
+
+
 
 		//move the camera up and down
 		playerY = player.transform.position.y;
@@ -57,13 +66,6 @@ public class CameraController : MonoBehaviour {
 				transform.position += new Vector3 (0, playerY + moveThreshold - basePosition.y);
 			}
 		}
-
-
-		//Move the camera to the right
-		if(player.transform.position.x - Camera.main.gameObject.transform.position.x > 3 )
-				transform.position += new Vector3 (player.transform.position.x - basePosition.x, 0);
-			
-		
 
 	}
 		
