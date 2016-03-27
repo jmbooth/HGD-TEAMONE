@@ -12,7 +12,7 @@ public class HarpoonTravel : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.Translate (new Vector3 (-travelspeed, 0, 0));
+		transform.Translate (new Vector3 (0, travelspeed, 0));
 	}
 
 	void OnTriggerEnter2D(Collider2D other){

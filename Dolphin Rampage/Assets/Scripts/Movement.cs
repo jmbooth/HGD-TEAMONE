@@ -101,34 +101,36 @@ public class Movement : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other){
 		if (other.gameObject.CompareTag ("Water")) {
 			playerBody.gravityScale = waterGrav;
-            inWater = true;
+			inWater = true;
+		} else if (other.gameObject.CompareTag ("Mine")) {
+			mineDeath ();
 		} else if (other.gameObject.CompareTag ("Fisherman")) {
 			Destroy (other.gameObject);
 			score += 10 * scoreMultiplier;
-            Vector3 v = new Vector3(other.gameObject.transform.position.x, other.gameObject.transform.position.y);
-            randomDrop(v);
+			Vector3 v = new Vector3 (other.gameObject.transform.position.x, other.gameObject.transform.position.y);
+			randomDrop (v);
 		} else if (other.gameObject.CompareTag ("Harpooner")) {
 			Destroy (other.gameObject);
 			score += 10 * scoreMultiplier;
-            Vector3 v = new Vector3(other.gameObject.transform.position.x, other.gameObject.transform.position.y);
-            randomDrop(v);
-        } else if (other.gameObject.CompareTag ("Boat")) {
+			Vector3 v = new Vector3 (other.gameObject.transform.position.x, other.gameObject.transform.position.y);
+			randomDrop (v);
+		} else if (other.gameObject.CompareTag ("Boat")) {
 			if (playerBody.velocity.magnitude >= speedToDestroyBoat) {
 				Destroy (other.gameObject);
 				score += 15 * scoreMultiplier;
-                Vector3 v = new Vector3(other.gameObject.transform.position.x, other.gameObject.transform.position.y);
-                randomDrop(v);
-            }
+				Vector3 v = new Vector3 (other.gameObject.transform.position.x, other.gameObject.transform.position.y);
+				randomDrop (v);
+			}
 		} else if (other.gameObject.CompareTag ("Net")) {
 			//Destroy (other.gameObject);
 			netDeath ();
 		} else if (other.gameObject.CompareTag ("Harpoon")) {
 			harpoonDeath ();
 		} else if (other.gameObject.CompareTag ("PowerUp")) {
-            Destroy(other.gameObject);
-            scoreMultiplier = 2;
-            powerUpTimer = 900;
-        }
+			Destroy (other.gameObject);
+			scoreMultiplier = 2;
+			powerUpTimer = 900;
+		}
 
     }
 
@@ -160,6 +162,13 @@ public class Movement : MonoBehaviour {
 		playerBody.velocity = Vector2.zero;
 		playerBody.AddForce (new Vector2 (-50, 0));
 		playerBody.gravityScale = 0;
+
+		sceneController.GetComponent<FadeInAndOut> ().EndScene ("DeathScreen");
+	}
+
+	void mineDeath(){
+		isDead = true;
+		setText ();
 
 		sceneController.GetComponent<FadeInAndOut> ().EndScene ("DeathScreen");
 	}

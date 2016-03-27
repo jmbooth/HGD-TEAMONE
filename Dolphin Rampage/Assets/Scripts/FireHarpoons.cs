@@ -5,6 +5,7 @@ public class FireHarpoons : MonoBehaviour {
 
 	public GameObject harpoon;
 	private float timecount;
+	public GameObject boob;
 
 	// Use this for initialization
 	void Start () {
@@ -15,9 +16,9 @@ public class FireHarpoons : MonoBehaviour {
 	void Update () {
 		timecount += 1;
 		if (timecount >= 120) {
-			//Vector3 temp = transform.rotation.eulerAngles;
-			//temp.z += 90;
-			Instantiate (harpoon, transform.position, Quaternion.identity);
+			Vector3 temp = transform.position;
+			temp += new Vector3 (-1.2f, -.28f, 0f);
+			Instantiate (harpoon, temp, boob.transform.rotation);
 			timecount = 0;
 		}
 	}
