@@ -20,6 +20,9 @@ public class Movement : MonoBehaviour {
     private Vector3 dolphPos;
     private int scoreMultiplier;
     private int powerUpTimer;
+
+	public GameObject brokenFishingBoat1;
+
 	//public BoxCollider2D water;
 	//private GameObject water = GameObject.Find ("Water");
 	//public bool inWater;
@@ -116,6 +119,10 @@ public class Movement : MonoBehaviour {
 			randomDrop (v);
 		} else if (other.gameObject.CompareTag ("Boat")) {
 			if (playerBody.velocity.magnitude >= speedToDestroyBoat) {
+
+				Transform copyObj = other.transform;
+				Instantiate (brokenFishingBoat1, copyObj.transform.position, copyObj.transform.rotation);
+
 				Destroy (other.gameObject);
 				score += 15 * scoreMultiplier;
 				Vector3 v = new Vector3 (other.gameObject.transform.position.x, other.gameObject.transform.position.y);
