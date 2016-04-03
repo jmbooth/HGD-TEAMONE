@@ -20,6 +20,13 @@ public class Movement : MonoBehaviour {
     private Vector3 dolphPos;
     private int scoreMultiplier;
     private int powerUpTimer;
+	// Zac's recent changes
+	// Used to stop the player from spinning wildly on death
+	private Vector3 finalState;
+	// Used to smooth out the player's "animation"
+	private float tempZ;
+	// Used to swap in the explosion prefab for the mine
+	public GameObject explosion;
 
 	public GameObject brokenFishingBoat1;
 
@@ -39,28 +46,58 @@ public class Movement : MonoBehaviour {
         dolphPos = transform.position;
         setText ();
         scoreMultiplier = 1;
+		finalState = transform.rotation.eulerAngles;
+		tempZ = 0.0f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		//don't allow the player to move if the player is dead
-		if (isDead) 
+		if (isDead) { 
+			//playerBody.transform.rotation = Quaternion.Euler(finalState);
+			Vector3 butt = transform.rotation.eulerAngles;
+			if (tempZ > 0) {
+				tempZ -= .25f;
+			} else if (tempZ < 0) {
+				tempZ += .25f;
+			}
+			butt.z = tempZ;
+			transform.rotation = Quaternion.Euler (butt);
 			return;
+		}
 	
 		//rotate the dolphin based on user input
 		Vector3 temp = transform.rotation.eulerAngles;
 		temp.z = 0.0f;
 		transform.rotation = Quaternion.Euler (temp);
 
+
 		if (Input.GetAxis ("Vertical") > 0) {
 			temp = transform.rotation.eulerAngles;
-			temp.z = 30.0f;
+			if (tempZ < 30)
+				tempZ += 1.5f;
+			//temp.z = 30.0f;
+			temp.z = tempZ;
 			transform.rotation = Quaternion.Euler (temp);
 		} else if (Input.GetAxis ("Vertical") < 0) {
 			temp = transform.rotation.eulerAngles;
-			temp.z = -30.0f;
+			if (tempZ > -30)
+				tempZ -= 1.5f;
+			//temp.z = -30.0f;
+			temp.z = tempZ;
+			transform.rotation = Quaternion.Euler (temp);
+		} else {
+			if (tempZ > 0) {
+				tempZ -= 1.5f;
+			} else if (tempZ < 0) {
+				tempZ += 1.5f;
+			}
+			temp = transform.rotation.eulerAngles;
+			temp.z = tempZ;
 			transform.rotation = Quaternion.Euler (temp);
 		}
+
+		finalState = transform.rotation.eulerAngles;
 
 
 		double horizontal;
@@ -106,7 +143,7 @@ public class Movement : MonoBehaviour {
 			playerBody.gravityScale = waterGrav;
 			inWater = true;
 		} else if (other.gameObject.CompareTag ("Mine")) {
-			mineDeath ();
+			mineDeath (other.gameObject);
 		} else if (other.gameObject.CompareTag ("Fisherman")) {
 			Destroy (other.gameObject);
 			score += 10 * scoreMultiplier;
@@ -173,9 +210,20 @@ public class Movement : MonoBehaviour {
 		sceneController.GetComponent<FadeInAndOut> ().EndScene ("DeathScreen");
 	}
 
-	void mineDeath(){
+	void mineDeath(GameObject other){
 		isDead = true;
 		setText ();
+		Instantiate (explosion, other.transform.position, Quaternion.identity);
+		float xSpeed = (playerBody.transform.position.x - other.transform.position.x) * 1000;
+		float ySpeed = (playerBody.transform.position.y - other.transform.position.y) * 1000;
+		//float xSpeed = Random.Range (1000, 3000);
+		//float ySpeed = Random.Range (1000, 3000);
+		//if (xSpeed % 2 == 0)
+			//xSpeed *= -1;
+		//if (ySpeed % 2 == 0)
+			//ySpeed *= -1;
+		playerBody.AddForce (new Vector2 (xSpeed, ySpeed));
+		Destroy (other);
 
 		sceneController.GetComponent<FadeInAndOut> ().EndScene ("DeathScreen");
 	}
