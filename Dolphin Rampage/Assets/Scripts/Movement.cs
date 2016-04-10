@@ -150,19 +150,19 @@ public class Movement : MonoBehaviour {
 		if (other.gameObject.CompareTag ("Water")) {
 			playerBody.gravityScale = waterGrav;
 			inWater = true;
-		} else if (other.gameObject.CompareTag ("Mine")) {
+		} else if (other.gameObject.CompareTag ("Mine") || other.gameObject.CompareTag ("Bomb")) {
 			mineDeath (other.gameObject);
 		} else if (other.gameObject.CompareTag ("Fisherman")) {
 			Destroy (other.gameObject);
 			score += 10 * scoreMultiplier;
 			Vector3 v = new Vector3 (other.gameObject.transform.position.x, other.gameObject.transform.position.y);
-            randomDrop(v, "Fisherman");
-        } else if (other.gameObject.CompareTag ("Harpooner")) {
+			randomDrop (v, "Fisherman");
+		} else if (other.gameObject.CompareTag ("Harpooner")) {
 			Destroy (other.gameObject);
 			score += 10 * scoreMultiplier;
 			Vector3 v = new Vector3 (other.gameObject.transform.position.x, other.gameObject.transform.position.y);
-            randomDrop(v, "Harpooner");
-        } else if (other.gameObject.CompareTag ("Boat")) {
+			randomDrop (v, "Harpooner");
+		} else if (other.gameObject.CompareTag ("Boat")) {
 			if (playerBody.velocity.magnitude >= speedToDestroyBoat) {
 
 
@@ -175,29 +175,32 @@ public class Movement : MonoBehaviour {
 
 				score += 15 * scoreMultiplier;
 				Vector3 v = new Vector3 (other.gameObject.transform.position.x, other.gameObject.transform.position.y);
-                randomDrop(v, "Boat");
-            }
+				randomDrop (v, "Boat");
+			}
 		} else if (other.gameObject.CompareTag ("Net")) {
-            if (inBubble)
-            {
-                powerUp = " ";
-                inBubble = false;
-                Destroy(other.gameObject);
-            }
-            else {
-                netDeath();
-            }
-        } else if (other.gameObject.CompareTag ("Harpoon")) {
-            if (inBubble)
-            {
-                powerUp = " ";
-                inBubble = false;
-                Destroy(other.gameObject);
-            }
-            else {
-                harpoonDeath();
-            }
-        }
+			if (inBubble) {
+				powerUp = " ";
+				inBubble = false;
+				Destroy (other.gameObject);
+			} else {
+				netDeath ();
+			}
+		} else if (other.gameObject.CompareTag ("Harpoon")) {
+			if (inBubble) {
+				powerUp = " ";
+				inBubble = false;
+				Destroy (other.gameObject);
+			} else {
+				harpoonDeath ();
+			}
+		} else if (other.gameObject.CompareTag ("Plane")) {
+			// Placeholder, change later
+			Instantiate (explosion, other.transform.position, Quaternion.identity);
+			Destroy (other.gameObject);
+			score += 10 * scoreMultiplier;
+			Vector3 v = new Vector3 (other.gameObject.transform.position.x, other.gameObject.transform.position.y);
+			randomDrop (v, "Harpooner");
+		}
 
     }
 
@@ -234,8 +237,8 @@ public class Movement : MonoBehaviour {
 	void mineDeath(GameObject other){
 		isDead = true;
 		Instantiate (explosion, other.transform.position, Quaternion.identity);
-		float xSpeed = (playerBody.transform.position.x - other.transform.position.x) * 1000;
-		float ySpeed = (playerBody.transform.position.y - other.transform.position.y) * 1000;
+		float xSpeed = (playerBody.transform.position.x - other.transform.position.x) * 2000;
+		float ySpeed = (playerBody.transform.position.y - other.transform.position.y) * 2000;
 		//float xSpeed = Random.Range (1000, 3000);
 		//float ySpeed = Random.Range (1000, 3000);
 		//if (xSpeed % 2 == 0)

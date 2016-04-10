@@ -5,6 +5,7 @@ public class BombGoBye : MonoBehaviour {
 
 	private int time;
 	public GameObject explosion;
+	public GameObject brokenBoat;
 
 	// Use this for initialization
 	void Start () {
@@ -20,6 +21,11 @@ public class BombGoBye : MonoBehaviour {
 
 	void OnTriggerEnter2D (Collider2D other){
 		if (other.gameObject.CompareTag ("Boat")){
+			Instantiate (brokenBoat, other.transform.position, Quaternion.identity);
+			Destroy (other.gameObject);
+			Instantiate (explosion, this.transform.position, Quaternion.identity);
+			Destroy (gameObject, .02f);
+		} else if (other.gameObject.CompareTag ("Mine") || other.gameObject.CompareTag ("Fisherman") || other.gameObject.CompareTag ("Harpooner")){
 			Destroy (other.gameObject);
 			Instantiate (explosion, this.transform.position, Quaternion.identity);
 			Destroy (gameObject);
