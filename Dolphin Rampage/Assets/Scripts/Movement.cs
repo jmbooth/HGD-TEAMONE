@@ -12,7 +12,7 @@ public class Movement : MonoBehaviour {
 	public float airGrav;
 	public float speedToDestroyBoat;
 	private bool inWater;
-	public static bool isDead = false;
+	public static bool isDead;
 	public Text distanceText;
 	public Text scoreText;
 	public static int score;
@@ -55,6 +55,7 @@ public class Movement : MonoBehaviour {
         scoreMultiplier = 1;
 		finalState = transform.rotation.eulerAngles;
 		tempZ = 0.0f;
+		isDead = false;
 	}
 	
 	// Update is called once per frame

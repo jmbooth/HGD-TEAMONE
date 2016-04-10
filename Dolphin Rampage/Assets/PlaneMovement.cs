@@ -5,8 +5,9 @@ public class PlaneMovement : MonoBehaviour {
 
 	public float speed = 3f;
 	public GameObject bomb;
-	public float bombTimer = 5f;
+	public float bombTimer = .5f;
 	private float bombTimerRunning = 0f;
+	public GameObject bombRot;
 
 	// Use this for initialization
 	void Start () {
@@ -19,7 +20,9 @@ public class PlaneMovement : MonoBehaviour {
 
 		if ((bombTimerRunning += Time.deltaTime) > bombTimer) {
 			bombTimerRunning = 0;
-			Instantiate (bomb, this.transform.position, this.transform.rotation);
+			Vector3 temp = this.transform.position;
+			temp.y -= .5f;
+			Instantiate (bomb, temp, bombRot.transform.rotation);
 		}
 	}
 }
