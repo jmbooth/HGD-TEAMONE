@@ -35,5 +35,7 @@ public class HarpoonTravel : MonoBehaviour {
 			offset = new Vector2 (tempX, tempY);
 			stuck = true;
 		}
+		else if(other.gameObject.CompareTag("Harpooner"))
+			Destroy(other.gameObject);	
 	}
 }
