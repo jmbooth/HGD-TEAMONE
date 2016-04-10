@@ -12,9 +12,7 @@ public class Movement : MonoBehaviour {
 	public float airGrav;
 	public float speedToDestroyBoat;
 	private bool inWater;
-	public static bool isDead = false;
-	public Text distanceText;
-	public Text scoreText;
+	public static bool isDead;
 	public static int score;
     public static float dist;
     private Vector3 dolphPos;
@@ -31,10 +29,8 @@ public class Movement : MonoBehaviour {
     //Power Up stuff:
     public static int scoreMultiplier;
     public static int powerUpTimer;
-    public Transform multiplierTransform;
-    public Transform bubbleShieldTransform;
-    public static bool inBubble = false;
-    private bool usingPowerUp = false;
+    public static bool inBubble;
+    private string powerUp;
     private Object mObj;
     private Object bObj;
 
@@ -55,6 +51,9 @@ public class Movement : MonoBehaviour {
         scoreMultiplier = 1;
 		finalState = transform.rotation.eulerAngles;
 		tempZ = 0.0f;
+        isDead = false;
+        powerUp = " ";
+        inBubble = false;
 	}
 	
 	// Update is called once per frame
@@ -132,7 +131,7 @@ public class Movement : MonoBehaviour {
         if(scoreMultiplier > 1) {
             powerUpTimer--;
             if(powerUpTimer == 0) {
-                usingPowerUp = false;
+                powerUp = " ";
                 scoreMultiplier = 1;
                 powerUpTimer = 900;
             }
@@ -179,7 +178,7 @@ public class Movement : MonoBehaviour {
 		} else if (other.gameObject.CompareTag ("Net")) {
             if (inBubble)
             {
-                usingPowerUp = false;
+                powerUp = " ";
                 inBubble = false;
                 Destroy(other.gameObject);
             }
@@ -189,25 +188,13 @@ public class Movement : MonoBehaviour {
         } else if (other.gameObject.CompareTag ("Harpoon")) {
             if (inBubble)
             {
-                usingPowerUp = false;
+                powerUp = " ";
                 inBubble = false;
                 Destroy(other.gameObject);
             }
             else {
                 harpoonDeath();
             }
-        } else if (other.gameObject.CompareTag("Multiplier"))
-        {
-            Destroy(mObj);
-            usingPowerUp = true;
-            scoreMultiplier = 2;
-            powerUpTimer = 900;
-        }
-        else if (other.gameObject.CompareTag("BubbleShield"))
-        {
-            Destroy(bObj);
-            usingPowerUp = true;
-            inBubble = true;
         }
 
     }
@@ -264,17 +251,18 @@ public class Movement : MonoBehaviour {
     {
         // Wood Boat = Bubble Shield, Metal Boat = Invincibility, Fisherman/Harpooner = x2
         int rnd = Random.Range(0, 2);
-        if (rnd == 1 && !usingPowerUp)
+        if (rnd == 1 && powerUp.Equals(" "))
         {
             if (type == "Fisherman" || type == "Harpooner")
             {
-                mObj = Instantiate(multiplierTransform.gameObject, v, multiplierTransform.rotation);
-                //multiPU.name = "Multiplier(Clone)";
-                //rObj = Instantiate(multiplierTransform, v, multiplierTransform.rotation);
+                powerUp = "Multiplier";
+                scoreMultiplier = 2;
+                powerUpTimer = 900;
             }
             else if (type == "Boat")
             {
-                bObj = Instantiate(bubbleShieldTransform.gameObject, v, bubbleShieldTransform.rotation);
+                powerUp = "BubbleShield";
+                inBubble = true;
             }
             else {
 
