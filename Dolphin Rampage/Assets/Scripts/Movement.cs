@@ -13,8 +13,6 @@ public class Movement : MonoBehaviour {
 	public float speedToDestroyBoat;
 	private bool inWater;
 	public static bool isDead;
-	//public Text distanceText;
-	//public Text scoreText;
 	public static int score;
     public static float dist;
     private Vector3 dolphPos;
@@ -31,8 +29,6 @@ public class Movement : MonoBehaviour {
     //Power Up stuff:
     public static int scoreMultiplier;
     public static int powerUpTimer;
-    //public Transform multiplierTransform;
-    //public Transform bubbleShieldTransform;
     public static bool inBubble;
     private string powerUp;
     private Object mObj;
@@ -199,18 +195,6 @@ public class Movement : MonoBehaviour {
             else {
                 harpoonDeath();
             }
-        } else if (other.gameObject.CompareTag("Multiplier"))
-        {
-            Destroy(mObj);
-            powerUp = "Multiplier";
-            scoreMultiplier = 2;
-            powerUpTimer = 900;
-        }
-        else if (other.gameObject.CompareTag("BubbleShield"))
-        {
-            Destroy(bObj);
-            powerUp = "BubbleShield";
-            inBubble = true;
         }
 
     }
