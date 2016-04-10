@@ -164,10 +164,14 @@ public class Movement : MonoBehaviour {
         } else if (other.gameObject.CompareTag ("Boat")) {
 			if (playerBody.velocity.magnitude >= speedToDestroyBoat) {
 
+
 				Transform copyObj = other.transform;
 				Instantiate (brokenFishingBoat1, copyObj.transform.position, copyObj.transform.rotation);
 
-				Destroy (other.gameObject);
+				Vector3 pos = Camera.main.transform.position;
+				pos.x -= 20f;
+				other.transform.position = pos;
+
 				score += 15 * scoreMultiplier;
 				Vector3 v = new Vector3 (other.gameObject.transform.position.x, other.gameObject.transform.position.y);
                 randomDrop(v, "Boat");

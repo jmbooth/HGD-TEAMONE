@@ -4,8 +4,7 @@ using UnityEngine.UI;
 
 public class CameraController : MonoBehaviour {
 
-	public Text distanceText;
-	public Text score;
+
 	public float speed=1f;
 	private Vector3 newPosition;
 	public GameObject player;
@@ -23,32 +22,23 @@ public class CameraController : MonoBehaviour {
 	void Start () {
 		newPosition = this.transform.position;
 		Camera.main.nearClipPlane = 0f;
-		//player =  GameObject.FindWithTag ("Player");
 		playerY = player.transform.position.y;
 		playerX = player.transform.position.x;
 		basePosition = transform.position;
-
 	}
 
 	// Update is called once per frame
 	float totalDistance;
 	void Update () {
 		newPosition = this.transform.position;
-
 		//transform.position = pos;
 		newPosition.x += Time.deltaTime * speed;
 
 		totalDistance += (newPosition.x - transform.position.x);
-		//score.text = "Score: " + ((int)(newPosition.x-transform.position.x)).ToString();
-		//distanceText.text = "Distance: " + ((int)totalDistance).ToString ();//((int)newPosition.x).ToString();
-
-
 		transform.position = newPosition;
 	}
 
 	void LateUpdate(){
-
-
 
 		//move the camera up and down
 		playerY = player.transform.position.y;
