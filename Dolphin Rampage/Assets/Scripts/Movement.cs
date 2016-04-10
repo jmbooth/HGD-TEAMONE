@@ -12,14 +12,12 @@ public class Movement : MonoBehaviour {
 	public float airGrav;
 	public float speedToDestroyBoat;
 	private bool inWater;
-	private bool isDead = false;
+	public static bool isDead = false;
 	public Text distanceText;
 	public Text scoreText;
 	public static int score;
     public static float dist;
     private Vector3 dolphPos;
-    private int scoreMultiplier;
-    private int powerUpTimer;
 	// Zac's recent changes
 	// Used to stop the player from spinning wildly on death
 	private Vector3 finalState;
@@ -30,11 +28,21 @@ public class Movement : MonoBehaviour {
 
 	public GameObject brokenFishingBoat1;
 
-	//public BoxCollider2D water;
-	//private GameObject water = GameObject.Find ("Water");
-	//public bool inWater;
+    //Power Up stuff:
+    public static int scoreMultiplier;
+    public static int powerUpTimer;
+    public Transform multiplierTransform;
+    public Transform bubbleShieldTransform;
+    public static bool inBubble = false;
+    private bool usingPowerUp = false;
+    private Object mObj;
+    private Object bObj;
 
-	public GameObject sceneController;
+    //public BoxCollider2D water;
+    //private GameObject water = GameObject.Find ("Water");
+    //public bool inWater;
+
+    public GameObject sceneController;
 
 	// Use this for initialization
 	void Start () {
@@ -44,7 +52,6 @@ public class Movement : MonoBehaviour {
 		score = 0;
 		dist = 0;
         dolphPos = transform.position;
-        setText ();
         scoreMultiplier = 1;
 		finalState = transform.rotation.eulerAngles;
 		tempZ = 0.0f;
@@ -121,11 +128,11 @@ public class Movement : MonoBehaviour {
             dist += Vector3.Distance(transform.position, dolphPos);
         }
         dolphPos = transform.position;
-		setText ();
 
         if(scoreMultiplier > 1) {
             powerUpTimer--;
             if(powerUpTimer == 0) {
+                usingPowerUp = false;
                 scoreMultiplier = 1;
                 powerUpTimer = 900;
             }
@@ -148,13 +155,13 @@ public class Movement : MonoBehaviour {
 			Destroy (other.gameObject);
 			score += 10 * scoreMultiplier;
 			Vector3 v = new Vector3 (other.gameObject.transform.position.x, other.gameObject.transform.position.y);
-			randomDrop (v);
-		} else if (other.gameObject.CompareTag ("Harpooner")) {
+            randomDrop(v, "Fisherman");
+        } else if (other.gameObject.CompareTag ("Harpooner")) {
 			Destroy (other.gameObject);
 			score += 10 * scoreMultiplier;
 			Vector3 v = new Vector3 (other.gameObject.transform.position.x, other.gameObject.transform.position.y);
-			randomDrop (v);
-		} else if (other.gameObject.CompareTag ("Boat")) {
+            randomDrop(v, "Harpooner");
+        } else if (other.gameObject.CompareTag ("Boat")) {
 			if (playerBody.velocity.magnitude >= speedToDestroyBoat) {
 
 				Transform copyObj = other.transform;
@@ -163,18 +170,41 @@ public class Movement : MonoBehaviour {
 				Destroy (other.gameObject);
 				score += 15 * scoreMultiplier;
 				Vector3 v = new Vector3 (other.gameObject.transform.position.x, other.gameObject.transform.position.y);
-				randomDrop (v);
-			}
+                randomDrop(v, "Boat");
+            }
 		} else if (other.gameObject.CompareTag ("Net")) {
-			//Destroy (other.gameObject);
-			netDeath ();
-		} else if (other.gameObject.CompareTag ("Harpoon")) {
-			harpoonDeath ();
-		} else if (other.gameObject.CompareTag ("PowerUp")) {
-			Destroy (other.gameObject);
-			scoreMultiplier = 2;
-			powerUpTimer = 900;
-		}
+            if (inBubble)
+            {
+                usingPowerUp = false;
+                inBubble = false;
+                Destroy(other.gameObject);
+            }
+            else {
+                netDeath();
+            }
+        } else if (other.gameObject.CompareTag ("Harpoon")) {
+            if (inBubble)
+            {
+                usingPowerUp = false;
+                inBubble = false;
+                Destroy(other.gameObject);
+            }
+            else {
+                harpoonDeath();
+            }
+        } else if (other.gameObject.CompareTag("Multiplier"))
+        {
+            Destroy(mObj);
+            usingPowerUp = true;
+            scoreMultiplier = 2;
+            powerUpTimer = 900;
+        }
+        else if (other.gameObject.CompareTag("BubbleShield"))
+        {
+            Destroy(bObj);
+            usingPowerUp = true;
+            inBubble = true;
+        }
 
     }
 
@@ -188,7 +218,6 @@ public class Movement : MonoBehaviour {
 	void netDeath(){
 		//Destroy (GameObject.Find ("Player"));
 		isDead = true;
-		setText ();
 
 		//stop the player
 		playerBody.velocity = Vector2.zero;
@@ -201,7 +230,6 @@ public class Movement : MonoBehaviour {
 
 	void harpoonDeath(){
 		isDead = true;
-		setText ();
 
 		playerBody.velocity = Vector2.zero;
 		playerBody.AddForce (new Vector2 (-50, 0));
@@ -212,7 +240,6 @@ public class Movement : MonoBehaviour {
 
 	void mineDeath(GameObject other){
 		isDead = true;
-		setText ();
 		Instantiate (explosion, other.transform.position, Quaternion.identity);
 		float xSpeed = (playerBody.transform.position.x - other.transform.position.x) * 1000;
 		float ySpeed = (playerBody.transform.position.y - other.transform.position.y) * 1000;
@@ -228,23 +255,26 @@ public class Movement : MonoBehaviour {
 		sceneController.GetComponent<FadeInAndOut> ().EndScene ("DeathScreen");
 	}
 
-	void setText(){
-		if (!isDead) {
-			scoreText.text = "Score: " + score.ToString ();
-            int textDist = (int)dist;
-			distanceText.text = "Distance: " + textDist.ToString () + " ft";
-		} else {
-			scoreText.text = "";
-			distanceText.text = "";
-		}
-	}
 
-    void randomDrop(Vector3 v) {
-        GameObject powerup = GameObject.Find("PowerUp");
-        int rnd = Random.Range(0, 3);
-        if(/*rnd == 1*/ true) {
-            // Drop random power up
-            Object rObj = Instantiate(powerup, v, powerup.transform.rotation);
+    void randomDrop(Vector3 v, string type)
+    {
+        // Wood Boat = Bubble Shield, Metal Boat = Invincibility, Fisherman/Harpooner = x2
+        int rnd = Random.Range(0, 2);
+        if (rnd == 1 && !usingPowerUp)
+        {
+            if (type == "Fisherman" || type == "Harpooner")
+            {
+                mObj = Instantiate(multiplierTransform.gameObject, v, multiplierTransform.rotation);
+                //multiPU.name = "Multiplier(Clone)";
+                //rObj = Instantiate(multiplierTransform, v, multiplierTransform.rotation);
+            }
+            else if (type == "Boat")
+            {
+                bObj = Instantiate(bubbleShieldTransform.gameObject, v, bubbleShieldTransform.rotation);
+            }
+            else {
+
+            }
         }
     }
 
