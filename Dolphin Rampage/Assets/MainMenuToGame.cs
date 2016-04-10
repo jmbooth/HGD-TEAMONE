@@ -6,7 +6,7 @@ public class MainMenuToGame : MonoBehaviour {
 	public GameObject sceneController;
 
 
-	public float inputDelay = 3f;
+	public float inputDelay = 2f;
 	private float inputDelayDelta = 0f;
 
 	void Update () {
