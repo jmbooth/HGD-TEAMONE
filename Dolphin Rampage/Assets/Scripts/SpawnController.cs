@@ -8,34 +8,73 @@ public class SpawnController : MonoBehaviour
 	public GameObject boatTransform;
 	public GameObject fisherTransform;
 	public GameObject HarpoonerTransform;
-	private GameObject[,] spawnedMat = new GameObject[5, 3];
+	public GameObject MineTransform;
+	public GameObject PlaneTransform;
 	float timeb;
-	float timeh;
-	float spawnTime; 
+	public float spawnTime; 
+	int distance;
 	// Use this for initialization
 	void Start ()
 	{
-		timeb = timeh = 0;
+		timeb = 0;
 		spawnTime = Random.Range(10,15);
 	}
 
 	// Update is called once per frame
 	Vector3 boatPosition; 
 
+	/***************
+	 * 
+	 * r controls what can spawn
+	 * one object is spawned every interval defined by spawnTime
+	 * 
+	 * 
+	 * 
+	 ****************/
+
 	void Update ()
 	{
-
+		distance = (int)Movement.dist;
+		//Debug.Log (distance.ToString ());
 		timeb += Time.deltaTime;
-		timeh += Time.deltaTime;
 		boatPosition = new Vector3 (camTransform.position.x + 19.2f, 5.62f);
+
+		//control when planes,mines, and harpooners start appearing
+		int r=2;
+		if (distance >= 30)
+			r = 5;
+		else if (distance >= 30)
+			r = 4;
+		else if (distance >= 20)
+			r = 3;
+		
 		if (timeb >= spawnTime) {
-			Instantiate (boatTransform.transform, boatPosition, boatTransform.transform.rotation);
+
 			timeb = 0;
 			spawnTime = Random.Range (10, 15);
-			int extraSpawns = Random.Range (1, 3);
-
+			int extraSpawns = Random.Range (1, r);
+			Debug.Log ("Dist: " + distance.ToString () + " r: " + r.ToString () + "extraSpawns: " + extraSpawns.ToString ());
 			switch (extraSpawns) {
+			case 5:
+				//spawn plane
+				Vector3 PlanePosition = new Vector3 (Random.Range (camTransform.position.x + 19.2f, camTransform.position.x + 38.4f), Random.Range (6f, 10f));
+				Instantiate (PlaneTransform, PlanePosition, PlaneTransform.transform.rotation);
+				break;
+
+			case 4:
+				//spawn mine
+				Vector3 MinePosition = new Vector3 (Random.Range (camTransform.position.x + 19.2f, camTransform.position.x + 38.4f), Random.Range (-2.6f, 4f));
+				Instantiate (MineTransform, MinePosition, MineTransform.transform.rotation) ;
+				break;
+
 			case 3:
+				//spawn harpooner
+				Vector3 HarpoonerPosition = new Vector3 (Random.Range (camTransform.position.x + 19.2f, camTransform.position.x + 38.4f), Random.Range (-2.6f, 4f));
+				Instantiate (HarpoonerTransform, HarpoonerPosition, HarpoonerTransform.transform.rotation) ;
+				break;
+
+			case 2:
+				Instantiate (boatTransform.transform, boatPosition, boatTransform.transform.rotation);
 				//spawn fisherman and net
 				boatPosition = new Vector3 (Random.Range (boatPosition.x - .3f, boatPosition.x + .3f), boatPosition.y + .3f);
 				Instantiate (fisherTransform.transform, boatPosition, fisherTransform.transform.rotation) ;
@@ -44,27 +83,13 @@ public class SpawnController : MonoBehaviour
 				Instantiate (netTransform.transform, boatPosition, netTransform.transform.rotation) ;
 				break;
 
-			case 2:
+			case 1:
+				Instantiate (boatTransform.transform, boatPosition, boatTransform.transform.rotation);
 				//spawn fisherman
 				boatPosition = new Vector3 (Random.Range (boatPosition.x - .3f, boatPosition.x + .3f), boatPosition.y + .3f);
 				Instantiate (fisherTransform.transform, boatPosition, fisherTransform.transform.rotation) ;
 				break;
-
-			case 1:
-				//spawn net
-				boatPosition = new Vector3 (Random.Range (boatPosition.x - .3f, boatPosition.x + .3f), boatPosition.y - (boatTransform.transform.localScale.y * 1.5f));
-				Instantiate (netTransform.transform, boatPosition, netTransform.transform.rotation) ;
-				break;
-
-			case 0:
-				break;
 			}
-			
-		} else if (timeh >= 15) {
-			timeh = 0;
-			Vector3 HarpoonerPosition = new Vector3 (Random.Range (camTransform.position.x + 19.2f, camTransform.position.x + 38.4f), Random.Range (-2.6f, 4f));
-			Instantiate (HarpoonerTransform, HarpoonerPosition, HarpoonerTransform.transform.rotation) ;
-
 		}
 	}
 }
