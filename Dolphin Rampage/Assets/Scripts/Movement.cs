@@ -260,13 +260,13 @@ public class Movement : MonoBehaviour {
     void randomDrop(Vector3 v, string type)
     {
         // Wood Boat = Bubble Shield, Metal Boat = Invincibility, Fisherman/Harpooner = x2
-        int rnd = Random.Range(0, 2);
+        int rnd = Random.Range(0, 3);
         if (rnd == 1 && powerUp.Equals(" "))
         {
             if (type == "Fisherman" || type == "Harpooner")
             {
                 powerUp = "Multiplier";
-                scoreMultiplier = 2;
+				scoreMultiplier = Random.Range(2,5);
                 powerUpTimer = 900;
             }
             else if (type == "Boat")

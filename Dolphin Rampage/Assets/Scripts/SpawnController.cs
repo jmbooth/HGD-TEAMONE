@@ -40,13 +40,13 @@ public class SpawnController : MonoBehaviour
 		boatPosition = new Vector3 (camTransform.position.x + 19.2f, 5.62f);
 
 		//control when planes,mines, and harpooners start appearing
-		int r=2;
-		if (distance >= 30)
+		int r=3;
+		if (distance >= 50)
+			r = 6;
+		else if (distance >= 100)
 			r = 5;
-		else if (distance >= 30)
+		else if (distance >= 150)
 			r = 4;
-		else if (distance >= 20)
-			r = 3;
 		
 		if (timeb >= spawnTime) {
 

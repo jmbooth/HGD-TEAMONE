@@ -27,7 +27,7 @@ public class UserInterface : MonoBehaviour {
             distanceText.text = "Distance: " + textDist.ToString() + " ft";
             if (Movement.scoreMultiplier > 1)
             {
-                powerUpText.text = "x2 Score: " + ((int)(Movement.powerUpTimer / 60) + 1).ToString();
+				powerUpText.text = "x" + Movement.scoreMultiplier + " Score: " + ((int)(Movement.powerUpTimer / 60) + 1).ToString();
             }
             else if (Movement.inBubble)
             {
