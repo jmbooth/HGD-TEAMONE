@@ -13,11 +13,9 @@ public class Movement : MonoBehaviour {
 	public float speedToDestroyBoat;
 	private bool inWater;
 	public static bool isDead;
-	public Text distanceText;
-	public Text scoreText;
 	public static int score;
     public static float dist;
-    private Vector3 dolphPos;
+    public static Vector3 dolphPos;
 	// Zac's recent changes
 	// Used to stop the player from spinning wildly on death
 	private Vector3 finalState;
