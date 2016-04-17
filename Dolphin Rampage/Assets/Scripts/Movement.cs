@@ -16,7 +16,6 @@ public class Movement : MonoBehaviour {
 	public static int score;
     public static float dist;
     public static Vector3 dolphPos;
-	// Zac's recent changes
 	// Used to stop the player from spinning wildly on death
 	private Vector3 finalState;
 	// Used to smooth out the player's "animation"
