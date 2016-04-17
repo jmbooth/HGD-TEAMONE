@@ -20,6 +20,8 @@ public class MineFloat : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		Vector3 lastposition = transform.position;
+
 		if (up) {
 			if (floatPos <= floatRange) {
 				floatPos += (Math.Min((floatRange - floatPos), (floatRange + floatPos)) / 64f) + .005f;
@@ -34,6 +36,6 @@ public class MineFloat : MonoBehaviour {
 			}
 		}
 
-		transform.position = new Vector3 (basePosition.x, basePosition.y + floatPos, basePosition.z);
+		transform.position = new Vector3 (lastposition.x, basePosition.y + floatPos, basePosition.z);
 	}
 }

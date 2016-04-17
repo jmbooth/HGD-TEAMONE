@@ -22,8 +22,8 @@ public class Movement : MonoBehaviour {
 	private float tempZ;
 	// Used to swap in the explosion prefab for the mine
 	public GameObject explosion;
-
 	public GameObject brokenFishingBoat1;
+	public AudioSource killPlaneSound;
 
     //Power Up stuff:
     public static int scoreMultiplier;
@@ -147,13 +147,14 @@ public class Movement : MonoBehaviour {
 		if (other.gameObject.CompareTag ("Water")) {
 			playerBody.gravityScale = waterGrav;
 			inWater = true;
-		} else if (other.gameObject.CompareTag ("Mine") || other.gameObject.CompareTag ("Bomb")) {
-			mineDeath (other.gameObject);
 		} else if (other.gameObject.CompareTag ("Fisherman")) {
 			Destroy (other.gameObject);
 			score += 10 * scoreMultiplier;
 			Vector3 v = new Vector3 (other.gameObject.transform.position.x, other.gameObject.transform.position.y);
 			randomDrop (v, "Fisherman");
+		} else if (other.gameObject.CompareTag ("Mine") || other.gameObject.CompareTag ("Bomb")) {
+			other.GetComponent<AudioSource> ().Play ();
+			mineDeath (other.gameObject);
 		} else if (other.gameObject.CompareTag ("Harpooner")) {
 			Destroy (other.gameObject);
 			score += 10 * scoreMultiplier;
@@ -161,7 +162,7 @@ public class Movement : MonoBehaviour {
 			randomDrop (v, "Harpooner");
 		} else if (other.gameObject.CompareTag ("Boat")) {
 			if (playerBody.velocity.magnitude >= speedToDestroyBoat) {
-
+				other.GetComponent<AudioSource> ().Play ();
 
 				Transform copyObj = other.transform;
 				Instantiate (brokenFishingBoat1, copyObj.transform.position, copyObj.transform.rotation);
@@ -192,10 +193,14 @@ public class Movement : MonoBehaviour {
 			}
 		} else if (other.gameObject.CompareTag ("Plane")) {
 			// Placeholder, change later
+			other.GetComponent<AudioSource> ().Play ();
 			Instantiate (explosion, other.transform.position, Quaternion.identity);
-			Destroy (other.gameObject);
-			score += 10 * scoreMultiplier;
+			Vector3 temp = other.transform.position;
+			temp.x -= 100;
+			other.transform.position = temp;
 			Vector3 v = new Vector3 (other.gameObject.transform.position.x, other.gameObject.transform.position.y);
+			Destroy (other.gameObject, 3);
+			score += 10 * scoreMultiplier;
 			randomDrop (v, "Harpooner");
 		}
 
@@ -243,7 +248,10 @@ public class Movement : MonoBehaviour {
 		//if (ySpeed % 2 == 0)
 			//ySpeed *= -1;
 		playerBody.AddForce (new Vector2 (xSpeed, ySpeed));
-		Destroy (other);
+		Vector3 temp = other.transform.position;
+		temp.x -= 100;
+		other.transform.position = temp;
+		Destroy (other.gameObject, 3);
 
 		sceneController.GetComponent<FadeInAndOut> ().EndScene ("DeathScreen");
 	}
