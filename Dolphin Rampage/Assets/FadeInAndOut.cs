@@ -11,6 +11,7 @@ public class FadeInAndOut : MonoBehaviour
 	private bool sceneEnding = false;
 
 	private string nextScene = "";
+	public GameObject musicToFade;
 
 	void Start()
 	{
@@ -41,6 +42,7 @@ public class FadeInAndOut : MonoBehaviour
 	{
 		// Lerp the colour of the texture between itself and black.
 		GetComponent<Image>().color = Color.Lerp(GetComponent<Image>().color, Color.black, fadeOutSpeed * Time.deltaTime);
+		musicToFade.GetComponent<FadeoutMusic> ().startFadeOut = true;
 	}
 	
 	
