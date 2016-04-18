@@ -16,6 +16,7 @@ public class Movement : MonoBehaviour {
 	public static int score;
     public static float dist;
     public static Vector3 dolphPos;
+	public static bool exploded;
 	// Used to stop the player from spinning wildly on death
 	private Vector3 finalState;
 	// Used to smooth out the player's "animation"
@@ -53,6 +54,7 @@ public class Movement : MonoBehaviour {
         isDead = false;
         powerUp = " ";
         inBubble = false;
+		exploded = false;
 	}
 	
 	// Update is called once per frame
@@ -153,6 +155,8 @@ public class Movement : MonoBehaviour {
 			Vector3 v = new Vector3 (other.gameObject.transform.position.x, other.gameObject.transform.position.y);
 			randomDrop (v, "Fisherman");
 		} else if (other.gameObject.CompareTag ("Mine") || other.gameObject.CompareTag ("Bomb")) {
+			powerUp = " ";
+			inBubble = false;
 			other.GetComponent<AudioSource> ().Play ();
 			mineDeath (other.gameObject);
 		} else if (other.gameObject.CompareTag ("Harpooner")) {
@@ -238,6 +242,7 @@ public class Movement : MonoBehaviour {
 
 	void mineDeath(GameObject other){
 		isDead = true;
+		exploded = true;
 		Instantiate (explosion, other.transform.position, Quaternion.identity);
 		float xSpeed = (playerBody.transform.position.x - other.transform.position.x) * 2000;
 		float ySpeed = (playerBody.transform.position.y - other.transform.position.y) * 2000;
