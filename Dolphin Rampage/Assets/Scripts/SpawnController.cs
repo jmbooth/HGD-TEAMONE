@@ -41,11 +41,11 @@ public class SpawnController : MonoBehaviour
 
 		//control when planes,mines, and harpooners start appearing
 		int r=3;
-		if (distance >= 50)
+		if (distance >= 300)
 			r = 6;
-		else if (distance >= 100)
+		else if (distance >= 200)
 			r = 5;
-		else if (distance >= 150)
+		else if (distance >= 100)
 			r = 4;
 		
 		if (timeb >= spawnTime) {
