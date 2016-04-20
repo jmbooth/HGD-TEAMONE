@@ -17,7 +17,6 @@ public class FadeInMusic : MonoBehaviour {
 		if (fadingIn) {
 			audioSource.volume = Mathf.Lerp (0f, 1f, time);
 			time += Time.deltaTime / fadeSpeed;
-			Debug.Log (audioSource.volume);
 		}
 		if(audioSource.volume >= 1)
 			fadingIn = false;

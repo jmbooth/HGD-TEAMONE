@@ -10,6 +10,16 @@ public class SpawnController : MonoBehaviour
 	public GameObject HarpoonerTransform;
 	public GameObject MineTransform;
 	public GameObject PlaneTransform;
+
+	public AudioSource voiceOne;
+	public AudioSource voiceTwo;
+	public AudioSource voiceThree;
+
+
+	private bool playedVoiceOne = false;
+	private bool playedVoiceTwo = false;
+	private bool playedVoiceThree= false; 
+
 	float timeb;
 	public int baseSpawnTime;
 	float spawnTime;
@@ -23,6 +33,10 @@ public class SpawnController : MonoBehaviour
 		distance = 0;
 		//limits spawn rate to minSpawnTime seconds
 		minSpawnTime = 5;
+
+		playedVoiceOne = false;
+		playedVoiceTwo = false;
+		playedVoiceThree = false;
 	}
 
 	// Update is called once per frame
@@ -47,20 +61,29 @@ public class SpawnController : MonoBehaviour
 
 		//control when planes,mines, and harpooners start appearing
 		int r=3;
-<<<<<<< HEAD
-		if (distance >= 600)
-=======
-		if (distance >= 300)
-			r = 6;
-		else if (distance >= 200)
-			r = 5;
-		else if (distance >= 100)
->>>>>>> 299bfac4fd8815265648397811c5bd9b0ecbe0de
+
+		if (distance >= 100) {
 			r = 4;
-		else if (distance >= 300)
+			if (!playedVoiceThree)
+			{
+				voiceThree.GetComponent<AudioSource>().Play();
+				playedVoiceThree = true;
+			}
+		} else if (distance >= 200) {
+			if(!playedVoiceTwo)
+			{
+				voiceTwo.GetComponent<AudioSource>().Play();
+				playedVoiceTwo = true;
+			}
 			r = 3;
-		else if (distance >= 100)
+		} else if (distance >= 50) {
+			if(!playedVoiceOne)
+			{
+				voiceOne.GetComponent<AudioSource> ().Play ();
+				playedVoiceOne = true;
+			}
 			r = 2;
+		}
 
 		if (timeb >= spawnTime) {
 			int extraSpawns = Random.Range (1, r);
