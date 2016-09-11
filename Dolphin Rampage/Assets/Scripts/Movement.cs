@@ -59,6 +59,7 @@ public class Movement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+			
 		//don't allow the player to move if the player is dead
 		if (isDead) { 
 			//playerBody.transform.rotation = Quaternion.Euler(finalState);
@@ -104,6 +105,18 @@ public class Movement : MonoBehaviour {
 			transform.rotation = Quaternion.Euler (temp);
 		}
 
+		/*Bug Fix
+		  Bug Description: When dolphin hit y max, it would bounce backwards. This bug could
+		be exploited to travel backwards. The following if statement adds a force to the velocity
+		of the dolphin in an attempt to cancel out the direction in the -x direction. The fix is
+		not perfect as some backwords movement still appears to be poosible, however it is a 
+		dramatic improvement.
+		*/
+		if(playerBody.velocity.x < 0){
+			playerBody.AddForce(new Vector2(-(float)playerBody.velocity.x, 0));
+		}
+
+
 		finalState = transform.rotation.eulerAngles;
 
 
@@ -111,16 +124,18 @@ public class Movement : MonoBehaviour {
 		double vertical;
 		if (inWater) {
 			horizontal = Input.GetAxis ("Horizontal") * playerSpeed;
+			//Debug.Log(Input.GetAxis("Horizontal"));
 			vertical = Input.GetAxis ("Vertical") * playerSpeed;
 		} else {
 			horizontal = Input.GetAxis ("Horizontal") * playerSpeedInAir;
 			vertical = Input.GetAxis ("Vertical") * playerSpeedInAir;
 		}
+		//cause stuttering issue with dolphin when at max speed, but cause the dolphin to go faster then world renders when disabled.
 		if (playerBody.velocity.magnitude > PlayerMaxSpeed)
 			horizontal = 0;
 
 		playerBody.AddForce (new Vector2 ((float)horizontal, (float)vertical));
-
+		Debug.Log(dolphPos.x + " " + transform.position.x);
         if(transform.position.x < dolphPos.x){
             dist -= Vector3.Distance(transform.position, dolphPos);
         }
