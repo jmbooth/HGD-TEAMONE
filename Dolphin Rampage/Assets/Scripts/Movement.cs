@@ -135,7 +135,7 @@ public class Movement : MonoBehaviour {
 			horizontal = 0;
 
 		playerBody.AddForce (new Vector2 ((float)horizontal, (float)vertical));
-		Debug.Log(dolphPos.x + " " + transform.position.x);
+		//Debug.Log(dolphPos.x + " " + transform.position.x);
         if(transform.position.x < dolphPos.x){
             dist -= Vector3.Distance(transform.position, dolphPos);
         }
