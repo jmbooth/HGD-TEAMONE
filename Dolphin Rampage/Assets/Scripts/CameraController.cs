@@ -31,13 +31,8 @@ public class CameraController : MonoBehaviour {
 		oldBasePosition = transform.position;
 		Vector3 velocity = Vector3.zero;
 	}
-
-	// Update is called once per frame
+		
 	float totalDistance;
-	void Update () {
-		transform.position = Vector3.SmoothDamp(transform.position, player.transform.position, ref velocity, 0.3F);
-		//Debug.Log(transform.position);
-	}
 
 	/**Interpolates the color of the default background when the player character goes
 	 * above a certain height. This is used to simulate going higher into the atmosphere.
@@ -84,20 +79,18 @@ public class CameraController : MonoBehaviour {
 		basePosition = transform.position;
 		backgroundGradient();
 		//Debug.Log(gameObject.transform.position);
-		if (playerY > moveThreshold) {
-			/*if (playerY - moveThreshold >= maxOffset) {
-				transform.position = new Vector3 (basePosition.x, maxOffset);
-			} else {
-				transform.position += new Vector3 (0, playerY - moveThreshold - basePosition.y);
-			}*/
-		} else if (playerY <= -moveThreshold) {
-			if (playerY + moveThreshold <= -minOffset) {
-				//Debug.Log(playerY + moveThreshold + " + " + -minOffset);
-				transform.position = new Vector3 (basePosition.x, -minOffset);
-			} else {
-				transform.position += new Vector3 (0, playerY + moveThreshold - basePosition.y);
-			}
+
+		//has the camera smoothly follow the player and prevents camera from going beneath the world
+		Vector3 modifiedPlayerPos = player.transform.position;
+		if(player.transform.position.y <= 0){
+			modifiedPlayerPos.y = 0;
 		}
+		transform.position = Vector3.SmoothDamp(transform.position, modifiedPlayerPos, ref velocity, 0.3F);
+		if(transform.position.y <= 0){
+			transform.position.Set(transform.position.x , 0, transform.position.z);
+		}
+		transform.position.Set(transform.position.x , transform.position.y, 0);
+		Debug.Log(modifiedPlayerPos + " " + player.transform.position);
 		oldBasePosition = basePosition;
 
 	}
