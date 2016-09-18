@@ -60,23 +60,23 @@ public class SpawnController : MonoBehaviour
 		boatPosition = new Vector3 (camTransform.position.x + 19.2f, 5.62f);
 
 		//control when planes,mines, and harpooners start appearing
-		int r=3;
+		int r=1;
 
-		if (distance >= 100) {
+		if (distance >= 600) {
 			r = 4;
 			if (!playedVoiceThree)
 			{
 				voiceThree.GetComponent<AudioSource>().Play();
 				playedVoiceThree = true;
 			}
-		} else if (distance >= 200) {
+		} else if (distance >= 300) {
 			if(!playedVoiceTwo)
 			{
 				voiceTwo.GetComponent<AudioSource>().Play();
 				playedVoiceTwo = true;
 			}
 			r = 3;
-		} else if (distance >= 50) {
+		} else if (distance >= 100) {
 			if(!playedVoiceOne)
 			{
 				voiceOne.GetComponent<AudioSource> ().Play ();
@@ -86,7 +86,10 @@ public class SpawnController : MonoBehaviour
 		}
 
 		if (timeb >= spawnTime) {
-			int extraSpawns = Random.Range (1, r);
+			//int random.range is exculsive on the second argument
+			int extraSpawns = Random.Range (1, r+1);
+
+			Debug.Log (r + " " +extraSpawns);
 			timeb = 0;
 
 			//spawn time decreases by 1 for each 1000 distance traveled
