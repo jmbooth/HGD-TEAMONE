@@ -30,9 +30,11 @@ public class Movement : MonoBehaviour {
     public static int scoreMultiplier;
     public static int powerUpTimer;
     public static bool inBubble;
+	public static bool hasJetPack;
     private string powerUp;
     private Object mObj;
     private Object bObj;
+	private GameObject jetpack;
 
     //public BoxCollider2D water;
     //private GameObject water = GameObject.Find ("Water");
@@ -54,6 +56,7 @@ public class Movement : MonoBehaviour {
         isDead = false;
         powerUp = " ";
         inBubble = false;
+		hasJetPack = false;
 		exploded = false;
 	}
 	
@@ -127,13 +130,14 @@ public class Movement : MonoBehaviour {
 			//Debug.Log(Input.GetAxis("Horizontal"));
 			vertical = Input.GetAxis ("Vertical") * playerSpeed;
 		} else {
+			Debug.Log(playerSpeedInAir + " I ran " + airGrav);
 			horizontal = Input.GetAxis ("Horizontal") * playerSpeedInAir;
 			vertical = Input.GetAxis ("Vertical") * playerSpeedInAir;
 		}
 		//cause stuttering issue with dolphin when at max speed, but cause the dolphin to go faster then world renders when disabled.
-		if (playerBody.velocity.magnitude > PlayerMaxSpeed)
+		if (playerBody.velocity.magnitude > PlayerMaxSpeed){
 			horizontal = 0;
-
+		}
 		playerBody.AddForce (new Vector2 ((float)horizontal, (float)vertical));
 		//Debug.Log(dolphPos.x + " " + transform.position.x);
         if(transform.position.x < dolphPos.x){
@@ -153,6 +157,10 @@ public class Movement : MonoBehaviour {
             }
         }
 
+		if(Input.GetKeyDown("j")){
+			Debug.Log("J");
+			spawnJetPack();
+		}
 		//if (inWater) {
 		//	body.gravityScale = .1f;
 		//} else {
@@ -283,6 +291,9 @@ public class Movement : MonoBehaviour {
         int rnd = Random.Range(0, 3);
         if (rnd == 1 && powerUp.Equals(" "))
         {
+			powerUp = "JetPack";
+		
+
             if (type == "Fisherman" || type == "Harpooner")
             {
                 powerUp = "Multiplier";
@@ -297,7 +308,21 @@ public class Movement : MonoBehaviour {
             else {
 
             }
+            
         }
     }
+
+	void spawnJetPack(){
+		hasJetPack = true;
+
+	}
+
+	public bool getInWater(){
+		return inWater;
+	}
+	public Rigidbody2D getPlayerBody(){
+		return playerBody;
+	}
+
 
 }

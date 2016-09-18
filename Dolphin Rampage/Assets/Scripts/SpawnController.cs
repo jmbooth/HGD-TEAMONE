@@ -10,6 +10,9 @@ public class SpawnController : MonoBehaviour
 	public GameObject HarpoonerTransform;
 	public GameObject MineTransform;
 	public GameObject PlaneTransform;
+	public GameObject Jetpack;
+	public GameObject player;
+	private Movement mov;
 
 	public AudioSource voiceOne;
 	public AudioSource voiceTwo;
@@ -19,6 +22,7 @@ public class SpawnController : MonoBehaviour
 	private bool playedVoiceOne = false;
 	private bool playedVoiceTwo = false;
 	private bool playedVoiceThree= false; 
+	public static bool jetpackMade;
 
 	float timeb;
 	public int baseSpawnTime;
@@ -37,6 +41,9 @@ public class SpawnController : MonoBehaviour
 		playedVoiceOne = false;
 		playedVoiceTwo = false;
 		playedVoiceThree = false;
+		jetpackMade = false;
+
+		mov = player.GetComponent<Movement>();
 	}
 
 	// Update is called once per frame
@@ -146,6 +153,17 @@ public class SpawnController : MonoBehaviour
 				break;
 
 			}
+
+
 		}
+		if(Movement.hasJetPack){
+			Vector3 jetPackOffset = player.transform.position + new Vector3(-0.1f, 0.33f, 0);
+			if(!jetpackMade){
+				Instantiate(Jetpack.transform, jetPackOffset, player.transform.rotation);
+				jetpackMade = true;
+			}
+			
+		}
+
 	}
 }
