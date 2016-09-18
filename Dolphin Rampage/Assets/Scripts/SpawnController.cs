@@ -89,16 +89,14 @@ public class SpawnController : MonoBehaviour
 			//int random.range is exculsive on the second argument
 			int extraSpawns = Random.Range (1, r+1);
 
-			Debug.Log (r + " " +extraSpawns);
 			timeb = 0;
 
 			//spawn time decreases by 1 for each 1000 distance traveled
-				spawnTime = baseSpawnTime-(distance/500);
-						if(spawnTime<5)
-				spawnTime=5;
+			spawnTime = baseSpawnTime-(distance/500);
+					if(spawnTime<5)
+			spawnTime=5;
 
-			//Debug.Log ("Dist: " + distance.ToString () + " r: " + r.ToString () + "extraSpawns: " + extraSpawns.ToString ());
-			//Debug.Log (spawnTime.ToString ()+" timeb = "+timeb);
+
 
 			switch (extraSpawns) {
 			case 4:
