@@ -12,6 +12,7 @@ public class SpawnController : MonoBehaviour
 	public GameObject PlaneTransform;
 	public GameObject Jetpack;
 	public GameObject player;
+	public GameObject coralTransform;
 	private Movement mov;
 
 	public AudioSource voiceOne;
@@ -24,6 +25,7 @@ public class SpawnController : MonoBehaviour
 	private bool playedVoiceThree= false; 
 	public static bool jetpackMade;
 
+	private float noise;
 	float timeb;
 	public int baseSpawnTime;
 	float spawnTime;
@@ -48,7 +50,7 @@ public class SpawnController : MonoBehaviour
 
 	// Update is called once per frame
 	Vector3 boatPosition; 
-
+	Vector3 coralPosition;
 	/***************
 	 * higher spawnRate means slower spawns
 	 * r controls what can spawn
@@ -60,11 +62,13 @@ public class SpawnController : MonoBehaviour
 
 	void Update ()
 	{
+		noise = Mathf.PerlinNoise(Time.time, 0.0f);
 		if((int)Movement.dist > distance)
 			distance = (int)Movement.dist;
 		
 		timeb += Time.deltaTime;
 		boatPosition = new Vector3 (camTransform.position.x + 19.2f, 5.62f);
+		coralPosition = new Vector3 (camTransform.position.x + 18f, -4.5f);
 
 		//control when planes,mines, and harpooners start appearing
 		int r=1;
@@ -154,7 +158,14 @@ public class SpawnController : MonoBehaviour
 
 			}
 
-
+	
+		}
+	//control coral spawn
+		if(distance > 10){
+			if(noise > 0.78f){
+				coralPosition = new Vector3 (Random.Range (coralPosition.x - 1.5f, coralPosition.x + 11f), Random.Range(coralPosition.y -.7f, coralPosition.y + .2f), 0);
+				Instantiate (coralTransform.transform, coralPosition, coralTransform.transform.rotation);
+			}
 		}
 		if(Movement.hasJetPack){
 			Vector3 jetPackOffset = player.transform.position + new Vector3(-0.1f, 0.33f, 0);
